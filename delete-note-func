@@ -41,3 +41,34 @@ const handleDelete = (index) => {
                     <Text style={{ fontSize: 15, color: 'black' }} >Delete</Text>
     </TouchableOpacity>
     
+    
+    
+    
+    
+    
+  //I also wanted to add edit Function to here it is really basic 
+  
+  //send data  by navigation.navigate function !!!
+    <TouchableOpacity style={styles.buttonText2} onPress={() => navigation.navigate('EditNote', {
+                        index: index,
+                        item: item
+                      })}>
+                        <Text style={{ fontSize: 15, color: 'black' }} > Edit </Text>
+     </TouchableOpacity>
+  
+  const EditNote = ({route,navigation, ...props }) => {
+    const {item,index}=route.params; // here is  a important point you take date from main page !!!
+    const [editNote,setEditNote] = useState(item);
+
+    const hadleEditNote=()=>{
+       let editedNotes = [...props.notes];
+       editedNotes[index]=editNote;
+       props.setNotes(editedNotes);
+
+       navigation.navigate('Note');
+    }
+    
+    
+     <TouchableOpacity style={styles.buttonWrapper} onPress={()=>hadleEditNote()}>
+                            <Text style={styles.text}>Edit</Text>
+                        </TouchableOpacity>
