@@ -1,0 +1,37 @@
+  // this hooks defined in app or main page because we need note and notes hook for almost all the pages 
+  // and I did'nt write  function of add button in add page , I did that in main page , that's note make sence everytime!
+  
+  const [note, setNote] = useState('');
+  const [notes, setNotes] = useState([]);
+  const [date, setDate] = useState(new Date().toUTCString());
+  const [moveToTrash, setMoveToTrash] = useState([]);
+
+  const handleAddButton = () => {
+
+    if (note.trim().length > 0) {
+      const newNote = note;
+      const newNotes = [newNote, ...notes];
+      setNotes(newNotes);
+      setNote('')
+
+    } else {   
+      console.log('note didnt add')
+    }  
+  }
+  
+  
+     <Stack.Screen name='AddNote'>
+          {props => <AddNote {...props} setNote={setNote} note={note} setNotes={setNotes} notes={notes} handleAddButton={handleAddButton} />}
+     </Stack.Screen>
+  
+  
+  //in add note  page 
+  
+   <TextInput style={styles.input} placeholder='write a note ...' placeholderTextColor={'black'}
+              multiline={true}
+              value={props.note}
+              onChangeText={(value) => props.setNote(value)}
+            />
+            <TouchableOpacity style={styles.buttonWrapper} onPress={props.handleAddButton}>
+              <Text style={styles.text}>Add</Text>
+            </TouchableOpacity>
