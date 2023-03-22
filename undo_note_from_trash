@@ -1,3 +1,4 @@
+ // #1 
  const undoNote= (index)=>{
       let newArray = [...props.moveToTrash];
       let undoNote = newArray.splice(index,1);
@@ -17,7 +18,7 @@
      
      
      
-     //also To make undo your all notes 
+     // #2 also To make undo your all notes 
      
     function undoAll(){
     let newTrashArray =[...props.moveToTrash];
@@ -34,3 +35,30 @@
   <TouchableOpacity style={styles.buttonWrapper} onPress={()=>undoAll()}>
           <Text style={styles.title}>Undo All</Text>
    </TouchableOpacity>
+
+
+//if you want to more useful this code use like below
+function undoAll() {
+    Alert.alert('Undo All Notes', 'are you sure to make all the notes undo',[{
+      text: 'no',
+      onPress: () => console.log('no it pressed '),
+     
+    }, {
+      text: 'yes',
+      onPress: () => {
+        let newTrashArray = [...props.moveToTrash];
+        let undoNotes = [...props.notes];
+        newTrashArray.forEach((item, index) => {
+          undoNotes.push(item)
+        })
+
+        props.setMoveToTrash([]);
+        props.setNotes(undoNotes);
+
+
+      }
+    }
+
+    ])
+
+  }
