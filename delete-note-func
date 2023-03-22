@@ -1,0 +1,43 @@
+const handleDelete = (index) => {
+    let newArray = [...props.notes];
+    let trashedArray = newArray.splice(index, 1);
+    // console.log('new note  items ', newArray[0], newArray[1], newArray[2])
+    props.setNotes(newArray);
+    props.setMoveToTrash(trashedArray)
+
+    //  console.log('trashed', trashedArray[0])
+    let newTrash = [trashedArray, ...props.moveToTrash];
+    props.setMoveToTrash(newTrash);
+  }
+  
+  //the code below is in map fucntion :)
+   <TouchableOpacity style={styles.buttonText} onPress={() => handleDelete(index)}>
+                        <Text style={{ fontSize: 14, color: 'white', fontWeight: 500 }} >X</Text>
+    </TouchableOpacity>
+    
+    // #2 delete trashh 
+    const deleteTrash = () => {
+    let deletedNotes = [...props.moveToTrash]
+    deletedNotes = [];
+    props.setMoveToTrash([]);
+  }
+    
+     <TouchableOpacity style={styles.buttonWrapper} onPress={deleteTrash}>
+          <Text style={styles.title}>Empty</Text>
+        </TouchableOpacity>
+        
+        
+     //# delete an item permenantly from trash 
+      function deletePermenant(index) {
+    let newArray = [...props.moveToTrash];
+    let deletedItem = newArray.splice(index, 1);
+    props.setMoveToTrash(newArray);
+    console.log(deletedItem, 'been deleted successfully')
+
+  }
+  
+  // this code block is also in map function for list the array of trash notes 
+  <TouchableOpacity style={styles.buttonText2} onPress={() => deletePermenant(index)}>
+                    <Text style={{ fontSize: 15, color: 'black' }} >Delete</Text>
+    </TouchableOpacity>
+    
