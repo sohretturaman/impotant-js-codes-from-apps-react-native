@@ -9,3 +9,62 @@
 
     
   }
+
+
+making undo all  note by async storage 
+
+  function undoAll() {
+    //check here !!!
+    Alert.alert('Undo All Notes', 'are you sure to make all the notes undo',[{
+      text: 'no',
+      onPress: () => console.log('no it pressed '),
+     
+    }, {
+      text: 'yes',
+      onPress: () => {
+        let newTrashArray = [...props.moveToTrash];
+        let undoNotes = [...props.notes];
+        newTrashArray.forEach((item, index) => {
+          undoNotes.push(item)
+        })
+
+          //props.setMoveToTrash([]);
+         // props.setNotes(undoNotes);
+         /*
+          AsyncStorage.setItem('saveTrash',JSON.stringify([])).then(()=>{
+            props.setMoveToTrash([]);
+          }).catch((err)=>console.log(err))
+         */
+          AsyncStorage.setItem('saveNotes',JSON.stringify(undoNotes)).then(()=>{
+            props.setNotes(undoNotes);
+          }).catch((err)=>console.log(err))
+
+        
+      }
+    }
+
+    ])
+  
+    navigation.navigate('Note')
+
+  }
+  
+  
+  // making UNDO THE NOTE MY ASYNC STORAGE 
+  const undoNote = (index) => {
+    let newArray = [...props.moveToTrash];
+    let undoNote = newArray.splice(index, 1);
+   // props.setMoveToTrash(newArray);
+    let newNotes = [...undoNote, ...props.notes]
+   // props.setNotes(newNotes);
+
+    AsyncStorage.setItem('saveNotes',JSON.stringify(newNotes)).then(()=>{
+      props.setNotes(newNotes)
+    }).catch((err)=>console.log(err))
+
+    AsyncStorage.setItem('saveTrash',JSON.stringify(newArray)).then(()=>{
+      props.setMoveToTrash(newArray)
+    }).catch((err)=>console.log(err))
+   
+  }
+
