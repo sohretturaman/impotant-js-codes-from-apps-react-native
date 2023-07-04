@@ -1,0 +1,34 @@
+  const handleLogin = async(values) => {
+    //const current = auth().currentUser
+   // console.log('curretn user',current);   
+    setShowLoading(true);
+    try {
+       const login=  await auth().signInWithEmailAndPassword(values.email, values.password);
+        setShowLoading(false);
+        if(login.user) {
+            navigation.navigate('Bottom');
+            AsyncStorage.setItem('user',JSON.stringify(login))
+            .then(()=>setUser(login.user))
+            .catch((err)=>console.log('error',err))
+        
+          }else{setUser(null)}
+    } catch (e) {
+        setShowLoading(false);
+        console.log('hata var',e);
+   
+        }
+
+        //second
+        try {
+          const  getUser =  await AsyncStorage.getItem('user')
+          console.log('json value',getUser != null ? JSON.parse(getUser) : null);
+        } catch (e) {
+          console.log('errroror',e);
+          
+        }
+      
+        
+
+    //redux value == current user login
+//const user = auth().currentUser;  
+  };
