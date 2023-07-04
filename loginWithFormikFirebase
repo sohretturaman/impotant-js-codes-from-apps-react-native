@@ -1,0 +1,88 @@
+
+  const handleLogin = async(values) => {
+    //const current = auth().currentUser
+   // console.log('curretn user',current);   
+    setShowLoading(true);
+    try {
+       const login=  await auth().signInWithEmailAndPassword(values.email, values.password);
+        setShowLoading(false);
+        if(login.user) {
+            navigation.navigate('Bottom');
+            AsyncStorage.setItem('user',JSON.stringify(login))
+            .then(()=>setUser(login.user))
+            .catch((err)=>console.log('error',err))
+        
+          }else{setUser(null)}
+    } catch (e) {
+        setShowLoading(false);
+        console.log('hata var',e);
+   
+        }
+
+        //second
+        try {
+          const  getUser =  await AsyncStorage.getItem('user')
+          console.log('json value',getUser != null ? JSON.parse(getUser) : null);
+        } catch (e) {
+          console.log('errroror',e);
+          
+        }
+
+
+
+
+
+ return (
+    <KeyboardAvoidingView style={{height: '100%'}}>
+      <SafeAreaView style={styles.container}>
+        {/**header  wrapper */}
+        <View style={styles.bodyWrapper}>
+          <Image
+            source={require('../../components/image/chat.png')}
+            style={styles.image}
+          />
+          <Text style={styles.text}>Focused</Text>
+          <Text style={styles.disc}>
+            save your notes in english by default, work with your team, call
+            your team, share the screen and learn english at the same team.
+          </Text>
+          <View>{/**configure with  formik !!! */}</View>
+
+          <Formik
+            initialValues={{email: '', password: ''}}
+            onSubmit={handleLogin }>
+            {({handleChange, handleSubmit, values}) => (
+              <View style={styles.bottomWrapper}>
+                <Input
+                  placeholder={'please write email'}
+                  title={'Email'}
+                  onChangeText={handleChange('email')}
+                  value={values.email}
+                />
+                <Input
+                  placeholder={'please write password'}
+                  title={'Password'}
+                  isSecure={true}
+                  onChangeText={handleChange('password')}
+                  value={values.password}
+                />
+                <AuthButton />
+                <Button title="go to note" onPress={handleSubmit} />
+              </View>
+            )}
+          </Formik>
+          {/**textinput and  button */}
+        </View>
+        <Button title='go signupp' onPress={()=>navigation.navigate('Signup')}/>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
+  );
+};
+
+      
+        
+
+    //redux value == current user login
+//const user = auth().currentUser;  
+  };
+
