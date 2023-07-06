@@ -1,0 +1,11 @@
+try {
+  const trash = await AsyncStorage.getItem('saveTrash');
+  if(trash!==null){
+     let parsed = JSON.stringify(trash);
+     setMoveToTrash(parsed);
+  }
+
+} catch (error) {
+  console.log(error)
+} 
+
