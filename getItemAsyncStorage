@@ -9,3 +9,17 @@ try {
   console.log(error)
 } 
 
+this is if you have an array 
+or
+this is for real data from api 
+try {
+  const trash = await AsyncStorage.getItem('saveTrash');
+  if(trash!==null){
+     let parsed = JSON.parse(trash);
+     setMoveToTrash(parsed);
+  }
+
+} catch (error) {
+  console.log(error)
+} 
+
