@@ -1,0 +1,21 @@
+ {
+      /** FIRST WAY TO GET DATA FROM  FİRESTORE !!
+   firebase.firestore().collection('chats').get().then((querySnapshot) => {
+      querySnapshot.forEach(snapshot => {
+          let data = snapshot.data();
+          console.log('Data from firestore ',data);
+      })
+  }) */
+    }
+    //NOTE İMP: WHEN GİVE DATA  GİVE AS A FUNCTION OTHERWISE YOU CAN NOT TAKE  DATA !!
+    {
+      /** SECOND WAY TO  GET DATA FROM FİRESTORE !!! 
+firebase.firestore().collection('chats').where('users','array-contains',myEmail).onSnapshot((qurey)=>{
+    console.log('qurey data from firestoer',qurey.docs.map((x)=>x.data().users));
+    
+   })
+
+ */
+    }
+
+
