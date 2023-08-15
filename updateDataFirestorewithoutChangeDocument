@@ -1,0 +1,5 @@
+  firestore()
+        .doc('chats/'+query.id)
+        .set({chatId:query.id},{merge:true}) // merge keyword
+   
+     
