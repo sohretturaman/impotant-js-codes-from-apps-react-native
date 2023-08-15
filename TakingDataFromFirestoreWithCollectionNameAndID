@@ -1,0 +1,6 @@
+  firebase.firestore().doc('chats/'+route.params.chatId)
+  .onSnapshot((onSnapshot)=>{
+    console.log('chat data',onSnapshot.data());
+     setMessages(onSnapshot.data()?.messages);
+  })
+
