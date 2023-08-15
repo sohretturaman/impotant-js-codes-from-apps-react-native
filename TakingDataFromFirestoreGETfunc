@@ -1,0 +1,19 @@
+{/** Taking data form firestore with for loop and get function 
+    firestore()
+  .collection('chats').where('users','array-contains',myEmail)
+  .get()
+  .then(querySnapshot => {
+    let chatIDs=[]; 
+    let users =[]; 
+  //console.log('Total users: ', querySnapshot.size);
+  querySnapshot.forEach(documentSnapshot => {
+    chatIDs.push(documentSnapshot.id);
+    users.push(documentSnapshot.data());
+     // console.log('chat ID: ', documentSnapshot.id, documentSnapshot.data());
+   });
+    setChatIds(chatIDs);
+    setChatListData(users);
+    console.log('my users',users);
+    
+  });
+ */}
