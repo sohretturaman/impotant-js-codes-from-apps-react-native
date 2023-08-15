@@ -1,0 +1,5 @@
+{/**it is done , I can able to take data with chatid keys 
+firestore().collection('chats').doc(chatIds[0]).onSnapshot((val)=>{
+  console.log('value from chat ids**',val.data());
+ })
+*/}
