@@ -1,0 +1,29 @@
+ const HandleCreateChat =  async() => {
+    if (!myEmail || !frgnEmail) return;
+    setIsLoading(true)
+  
+  const createChat = await firebase.firestore()
+  .collection("chats")
+  .add(
+    {
+    users:[myEmail,frgnEmail],
+    messages:[]
+    }
+    ).then((query)=>
+    { console.log('looking for id',query.id??'there is no id');
+
+      
+      
+    }).catch((err)=>{
+      console.log('error exist while saving id',err.message)
+      setIsLoading(false)
+    } )
+    setFrgnEmail('');
+   console.log('after crating chat',createChat);
+   
+         
+   
+  };
+
+
+
