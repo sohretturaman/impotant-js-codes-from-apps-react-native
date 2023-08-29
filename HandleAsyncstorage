@@ -1,0 +1,20 @@
+Not :Async storage is not working without async functions and 
+const handleOnSubmit = async() => {
+    console.log('search value', search);
+    let newArray = [search, ...savedSearches];
+    console.log('saved serachs ', newArray);
+     await AsyncStorage.setItem('saveHistory',JSON.stringify(newArray))
+      .then(() => setSavedSearches(newArray))
+      .catch(err => console.log('an error accured', err));
+  };
+
+  const getHistory = async()=>{
+    try {
+     const Result = await AsyncStorage.getItem('saveHistory')
+     console.log('result from async storage',JSON.parse(Result))
+      
+    } catch (error) {
+       console.log('hey error exist');
+       
+    }
+  }
