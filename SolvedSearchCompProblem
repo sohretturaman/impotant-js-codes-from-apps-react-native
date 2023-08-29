@@ -1,0 +1,73 @@
+//Hello Everyone I just noticed that you can easily handle your search comp  issues . one of them is 
+//just handle your search comp with keyboard , enter key , and  handle that button using onSubmitEditing function.
+//That is something great :) 
+
+// here is the textInput  from serachComp 
+
+ <TextInput
+              style={styles.serachInput}
+              placeholder={text}
+              placeholderTextColor={'#454545'}
+              value={value}
+              onChangeText={onChangeText}
+              onSubmitEditing={onSubmitEditing}
+              enablesReturnKeyAutomatically={true} // that is the thing solves my problem 
+            />
+
+
+//on search screen 
+
+ const [search, setSearch] = useState('');
+  const [result, setResult] = useState([]);
+
+ <SearchComp
+        iconName={'keyboard-backspace'}
+        text={'search a user...'}
+        onChangeText={val => {
+          handleSearch(val);
+        }}
+        onCancel={onDeleteIcon}
+        value={search}
+        onSubmitEditing={handleOnSubmit}
+      />
+
+
+
+// how I handle the Search 
+
+        const handleSearch = searchVal => {
+    setSearch(searchVal);
+    if (searchVal.length == 0) {
+      setResult([]);
+    }
+    if (searchVal.length > 0) {
+      firebase
+        .firestore()
+        .collection('allUsers')
+        .onSnapshot(snapshot => {
+          setResult([]);
+          const dataList = snapshot.docs;
+          const query = searchVal.toLowerCase();
+          for (let item in dataList) {
+            let myUser = dataList[item].data().name.toLowerCase(); // seperated each item in data
+            if (myUser.slice(0, query.length).indexOf(query) !== -1) {
+              setResult(prevVal => {
+                return [...prevVal, dataList[item].data().name];
+              });
+            }
+          }
+        });
+
+
+
+
+
+//it workes when you pressed enter button on keyboard , on comp and emulator :)
+   const handleOnSubmit=()=>{
+    console.log( 'pressed enter ,save history  now')
+
+  }
+    }
+
+    console.log('result is ', result);
+  };
