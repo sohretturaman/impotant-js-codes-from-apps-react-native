@@ -1,0 +1,111 @@
+  firebase.auth().onAuthStateChanged((user)=>{
+    console.log('current user',user);
+    user.updateProfile({displayName:newValue})
+    
+  })
+
+  /// and to save  a user with  display name while signup 
+   const handleSignup = async values => {
+    setError(''); 
+     setIsLoading(true);
+     findUser('');
+  
+     let  users = []; 
+     const  checkUsers =findUser(values.username);
+     users=(await checkUsers).map((x)=>x.name);
+     console.log('users value in hadle',users);
+     
+  
+    try {
+ 
+      if (!users.length==0){
+        setIsLoading(false); 
+           console.log('users  exist , users value',users)
+           setError('user name is already exist')
+           
+      }else  {
+
+        const response = await auth().createUserWithEmailAndPassword(
+          values.email,
+          values.password,
+        );
+        await response.user.updateProfile({displayName: values.username});
+        console.log('User account created & signed in! response', response);
+
+        await firebase.firestore().collection('allUsers').add({
+          name: values.username,
+          email: values.email,
+        });
+        setIsLoading(false);
+        navigation.navigate('Login');
+      } 
+      
+     
+    
+       
+    } catch (error) {
+      setIsLoading(false);
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+        setError(error.message);
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+        setError(error.message);
+      }
+
+      setError(error.message);
+      console.log('error exist', error.message);
+    }
+ 
+  setIsLoading(false); 
+  };
+
+
+
+
+
+     <Formik
+            initialValues={{
+              username: '',
+              email: '',
+              password: '',
+            }}
+            onSubmit={handleSignup}>
+            {({handleChange, handleSubmit, values}) => (
+              <View style={styles.bottomWrapper}>
+                <Input
+                  placeholder={'please write username'}
+                  title={'User Name'}
+                  onChangeText={handleChange('username')}
+                  value={values.username}
+                />
+                <Input
+                  placeholder={'please write email'}
+                  title={'Email'}
+                  onChangeText={handleChange('email')}
+                  value={values.email}
+                />
+                <Input
+                  placeholder={'please write password'}
+                  title={'Password'}
+                  isSecure={true}
+                  onChangeText={handleChange('password')}
+                  value={values.password}
+                />
+             
+                <AuthButton
+                  title="Go Login"
+                  onPress={() => navigation.navigate('Login')}
+                  isLoading={isLoding}
+                />
+                <AuthButton
+                  title="Sign Up"
+                  onPress={handleSubmit}
+                  isLoading={isLoding}
+                />
+              </View>
+            )}
+          </Formik>
+          {/**textinput and  button */}
