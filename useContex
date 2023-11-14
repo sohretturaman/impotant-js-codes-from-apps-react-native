@@ -1,0 +1,157 @@
+// Contex.js file 
+
+import {createContext, useState} from 'react';
+
+export const Context = createContext({
+  ids: [],
+  AddFavMeal: id => {},
+  DelFalMeal: id => {},
+});
+
+const FavMealContextProvider = ({children}) => {
+  const [favMealIds, setFavMealIds] = useState([]);
+
+  const AddFavMeal = id => {
+    let newArray = [id, ...favMealIds];
+    setFavMealIds(newArray);
+    //setFavMealIds(currentIds => [id, ...currentIds]); it is a good way to update state
+  };
+
+  const DelFalMeal = id => {
+    let newList = favMealIds.filter(mealId => mealId !== id);
+    setFavMealIds(newList);
+  };
+
+  const myValue = {
+    ids: favMealIds,
+    AddFavMeal: AddFavMeal,
+    DelFalMeal: DelFalMeal,
+  };
+
+  return <Context.Provider value={myValue}>{children}</Context.Provider>;
+};
+
+export default FavMealContextProvider;
+
+
+
+///***Meal.js Screen ***
+import {Context} from '../store/context/Contex';
+
+const MealDetails = ({route, navigation}) => {
+  const FavMealsContex = useContext(Context);
+  const mealId = route.params.mealId;
+  const data = MEALS.find(item => item.id === mealId);
+
+  const isMealFav = FavMealsContex.ids.includes(mealId); //!! contexteki değerler yerine
+  //value kısmındaki değerler de çalışıyor
+
+  const ChangeFavStatus = () => {
+    if (isMealFav) {
+      FavMealsContex.DelFalMeal(mealId);
+    }
+    if (!isMealFav) {
+      FavMealsContex.AddFavMeal(mealId);
+    }
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title={isMealFav === true ? 'faved' : 'notFav'}
+          color="black"
+          style={{margin: 10}}
+          onPress={ChangeFavStatus}
+        />
+      ),
+    });
+  }, [navigation, ChangeFavStatus]); //'!!! very important when you update the function here the fav icon is working properly
+
+
+/// Favourites.js
+import {StyleSheet, Text, View, FlatList} from 'react-native';
+import React, {useContext} from 'react';
+import {MEALS} from '../data/dummy-data';
+import {Context} from '../store/context/Contex';
+import MealsComp from '../components/MealsComp';
+
+const FavouriteScreen = () => {
+  const FavMealsCntxt = useContext(Context);
+  const favMeals = MEALS.filter(meal => FavMealsCntxt.ids.includes(meal.id));
+
+  const renderItem = favMeal => {
+    const data = favMeal.item;
+    // console.log('fav meal in render item', favMeal.item.title);
+    return <MealsComp {...data} />;
+  };
+
+  return (
+    <View>
+      <FlatList data={favMeals} renderItem={renderItem} />
+    </View>
+  );
+};
+
+
+// App.js
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React from 'react';
+import AllCategoryScreen from './src/screens/AllCategoryScreen';
+import {NavigationContainer} from '@react-navigation/native';
+	@@ -8,6 +14,7 @@ import MealDetails from './src/screens/MealDetails';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import FavouriteScreen from './src/screens/FavouriteScreen';
+import CustomDrawer from './src/components/CustomDrawer';
+import FavMealContextProvider from './src/store/context/Contex';
+
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+	@@ -21,6 +28,11 @@ const DrawerRouter = () => {
+        headerTintColor: 'white',
+        drawerActiveTintColor: '#2E2319',
+        drawerActiveBackgroundColor: '#C29A5D',
+        headerRight: () => {
+          <TouchableOpacity>
+            <Text style={{color: 'white'}}>FAV</Text>
+          </TouchableOpacity>;
+        },
+      }}>
+      <Drawer.Screen
+        name="CategoriesAll"
+	@@ -41,25 +53,28 @@ const App = () => {
+  return (
+    <>
+      <StatusBar barStyle={'light-content'} />
+      <FavMealContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: true,
+              headerStyle: {backgroundColor: '#714209'},
+              headerTintColor: 'white',
+            }}>
+            <Stack.Screen
+              name="Drawer"
+              component={DrawerRouter}
+              options={{title: 'Categories', headerShown: false}}
+            />
+            <Stack.Screen
+              name="CategoryDetails"
+              component={CategoryDetails}
+              // options={{title: 'Meals Overview'}}
+            />
+            <Stack.Screen name="mealDetails" component={MealDetails} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FavMealContextProvider>
+    </>
+  );
+};
+	
