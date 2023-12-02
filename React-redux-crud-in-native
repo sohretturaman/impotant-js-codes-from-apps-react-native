@@ -1,0 +1,140 @@
+#ExpenseSlice File
+import FormatDate from '../utils/FormatDate';
+
+import {createSlice} from '@reduxjs/toolkit';
+
+export const ExpenseSlice = createSlice({
+  name: 'expenses',
+  initialState: {
+    data: [],
+  },
+  reducers: {
+    addExpense: (state, action) => {
+      console.log(
+        'add expense',
+        'state:',
+        state.data,
+        'action value',
+        action.payload,
+      );
+
+      state.data = [...state.data, ...action.payload];
+      // Redux Toolkit allows us to write "mutating" logic in reducers. It
+      // doesn't actually mutate the state because it uses the Immer library,
+      // which detects changes to a "draft state" and produces a brand new
+      // immutable state based off those changes.
+      // Also, no return statement is required from these functions.
+    },
+    deleteExpense: (state, action) => {
+      // state.data = [...action.payload, ...state.data];
+      console.log(
+        'delete expense state',
+        state.data.map(x => x.id), //all id's we had in our data
+        'action.payload',
+        action.payload,
+      );
+      state.data.filter(item => item.id !== action.payload);
+    },
+  },
+});
+
+// Action creators are generated for each case reducer function
+export const {addExpense, deleteExpense, updateExpense} = ExpenseSlice.actions;
+
+export default ExpenseSlice.reducer;
+
+
+
+
+#ExpenseStore
+
+import {configureStore} from '@reduxjs/toolkit';
+import ExpenseReducer from './ExpenseSlice';
+
+export const Store = configureStore({
+  reducer: {
+    expenses: ExpenseReducer,
+  },
+});
+
+#Using those functions in screens
+
+
+import {StyleSheet, Text, View} from 'react-native';
+import React, {useLayoutEffect, useState} from 'react';
+import {Colors} from '../components/Colors';
+import {Button, IconButton} from 'react-native-paper';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {addExpense, deleteExpense} from '../store/ExpenseSlice';
+
+const ManageExpense = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
+  const [idCounter, setIdCounter] = useState(0);
+  const {itemData} = route?.params;
+
+  const dispatch = useDispatch();
+  const Selector = useSelector(state => state.expenses.data);
+  //!the name you has  been given in createSlice and the initial state item's name
+  console.log('selector data', Selector);
+
+  useLayoutEffect(() => {
+    // change title based on button
+    navigation.setOptions({
+      title: itemData == 'new' ? 'Create a new expense' : 'Manage Expense',
+    });
+  }, [navigation]);
+
+  function AddExpense() {
+    setIdCounter(idCounter + 1);
+    const dataToSend = [{id: idCounter, definition: 'new item', price: 10}];
+    dispatch(addExpense(dataToSend));
+  }
+
+  function DeleteExpense() {
+    const id = Selector.map(x => x.id);
+    console.log('Delete func id', id[0]);
+
+    dispatch(deleteExpense(id[0])); // action . payload değeridir
+  }
+
+  return (
+    <View style={styles.container}>
+      <View
+        style={{
+          justifyContent: 'space-around',
+          flexDirection: 'row',
+          margin: 5,
+          marginTop: 10,
+        }}>
+        <Button mode="contained" onPress={DeleteExpense}>
+          Cancel
+        </Button>
+        <Button mode="contained-tonal" onPress={() => console.log('Pressed')}>
+          Edit
+        </Button>
+        <Button mode="contained-tonal" onPress={AddExpense}>
+          Add new expense
+        </Button>
+      </View>
+      <IconButton
+        icon={'delete'}
+        iconColor="red"
+        size={30}
+        style={{alignSelf: 'center'}}
+      />
+    </View>
+  );
+};
+
+export default ManageExpense;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.backgroundColor,
+  },
+});
+
+
