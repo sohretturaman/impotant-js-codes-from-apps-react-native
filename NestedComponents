@@ -1,0 +1,133 @@
+//#expense form page wrapper component
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+
+import Input from './Input';
+
+function ExpenseForm() {
+  const [inputValues, setInputValues] = useState({
+    amount: '',
+    date: '',
+    description: '',
+  });
+
+  function inputChangedHandler(inputIdentifier, enteredValue) {
+    setInputValues((curInputValues) => {
+      return {
+        ...curInputValues,
+        [inputIdentifier]: enteredValue,
+      };
+    });
+  }
+
+  return (
+    <View style={styles.form}>
+      <Text style={styles.title}>Your Expense</Text>
+      <View style={styles.inputsRow}>
+        <Input
+          style={styles.rowInput}
+          label="Amount"
+          textInputConfig={{
+            keyboardType: 'decimal-pad',
+            onChangeText: inputChangedHandler.bind(this, 'amount'),
+            value: inputValues.amount,
+          }}
+        />
+        <Input
+          style={styles.rowInput}
+          label="Date"
+          textInputConfig={{
+            placeholder: 'YYYY-MM-DD',
+            maxLength: 10,
+            onChangeText: inputChangedHandler.bind(this, 'date'),
+            value: inputValues.date,
+          }}
+        />
+      </View>
+      <Input
+        label="Description"
+        textInputConfig={{
+          multiline: true,
+          // autoCapitalize: 'none'
+          // autoCorrect: false // default is true
+          onChangeText: inputChangedHandler.bind(this, 'description'),
+          value: inputValues.description,
+        }}
+      />
+    </View>
+  );
+}
+
+export default ExpenseForm;
+
+const styles = StyleSheet.create({
+  form: {
+    marginTop: 40,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    marginVertical: 24,
+    textAlign: 'center',
+  },
+  inputsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  rowInput: {
+    flex: 1,
+  },
+});
+
+
+
+
+
+
+
+##input component 
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+
+import { GlobalStyles } from '../../constants/styles';
+
+function Input({ label, style, textInputConfig }) {
+
+  const inputStyles = [styles.input];
+
+  if (textInputConfig && textInputConfig.multiline) {
+    inputStyles.push(styles.inputMultiline)
+  }
+
+  return (
+    <View style={[styles.inputContainer, style]}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput style={inputStyles} {...textInputConfig} />
+    </View>
+  );
+}
+
+export default Input;
+
+const styles = StyleSheet.create({
+  inputContainer: {
+    marginHorizontal: 4,
+    marginVertical: 8
+  },
+  label: {
+    fontSize: 12,
+    color: GlobalStyles.colors.primary100,
+    marginBottom: 4,
+  },
+  input: {
+    backgroundColor: GlobalStyles.colors.primary100,
+    color: GlobalStyles.colors.primary700,
+    padding: 6,
+    borderRadius: 6,
+    fontSize: 18,
+  },
+  inputMultiline: {
+    minHeight: 100,
+    textAlignVertical: 'top'
+  }
+});
