@@ -1,0 +1,65 @@
+/** @format */
+
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { NavigationContainer } from "@react-navigation/native";
+import HomeScreen from "./src/screens/HomeScreen";
+import DetailScreen from "./src/screens/DetailScreen";
+import * as Linking from "expo-linking";
+import Settings from "./src/screens/Settings";
+const Stack = createNativeStackNavigator();
+
+const prefix = Linking.makeUrl("/");
+//const prefix = Linking.makeUrl("http://localhost:19006 "); // the link I gave first but it is woring anyway
+
+export default function App() {
+  const linking = {
+    prefixes: [prefix],
+    config: {
+      screens: {
+        Home: "/myhome",
+        Details: "/details",
+        Settings: "/settings",
+      },
+    },
+  };
+  return (
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Details" component={DetailScreen} />
+        <Stack.Screen name="Settings" component={Settings} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+
+// app.json 
+
+{
+ 
+  "expo": {
+    "scheme": "my-first-web-app", //important
+    "name": "my-web-app",
+    "slug": "my-web-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
