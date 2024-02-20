@@ -1,0 +1,13 @@
+  const filterPersons = () => {
+    const trimmedName = search.trim();
+    if (trimmedName === "") {
+      setFilteredPersons([]);
+      return;
+    }
+    const filteredData = persons.filter((item) => {
+      return item.name.toLowerCase().includes(trimmedName.toLowerCase());
+    });
+    console.log("filterd data", filteredData);
+
+    setFilteredPersons(filteredData);
+  };
